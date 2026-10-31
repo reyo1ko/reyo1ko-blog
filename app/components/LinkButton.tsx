@@ -23,16 +23,14 @@ export default function LinkButton({
         className={[
           "group flex items-center gap-2",
           "rounded-md px-2 py-1.5",
-          "text-sm text-zinc-200",
-          "hover:bg-white/5 active:bg-white/10",
+          "text-sm text-ink",
+          "hover:bg-soft active:bg-soft",
           "transition-colors select-none",
           className,
         ].join(" ")}
       >
         {icon ? (
-          <span className="w-5 shrink-0 text-zinc-500 group-hover:text-zinc-300">
-            {icon}
-          </span>
+          <span className="w-5 shrink-0 text-muted group-hover:text-ink">{icon}</span>
         ) : null}
 
         <span className="min-w-0 flex-1 truncate">{children}</span>
@@ -41,13 +39,10 @@ export default function LinkButton({
   }
 
   const base =
-    "inline-flex items-center px-2 py-1 rounded-md font-medium text-white " +
-    "hover:bg-indigo-600 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition";
+    "inline-flex items-center px-2 py-1 rounded-md font-medium text-on-strong " +
+    "hover:bg-strong focus:ring-2 focus:ring-offset-2 focus:ring-accent transition";
 
-  const styles =
-    variant === "category"
-      ? "bg-indigo-500 mr-2 my-2"
-      : "bg-indigo-500 m-2 text-sm";
+  const styles = variant === "category" ? "bg-strong mr-2 my-2" : "bg-strong m-2 text-sm";
 
   return (
     <Link href={href} className={`${base} ${styles} ${className}`}>

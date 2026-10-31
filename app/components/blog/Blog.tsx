@@ -14,9 +14,9 @@ function Pill({ href, children }: { href: string; children: React.ReactNode }) {
       className="
         inline-flex items-center gap-1
         rounded-md px-2 py-0.5
-        text-xs text-zinc-200
-        border border-white/10 bg-white/[0.03]
-        hover:bg-white/[0.06] hover:border-white/20
+        text-xs text-ink
+        border border-line bg-surface
+        hover:bg-soft hover:border-line
         transition-colors
         whitespace-nowrap
       "
@@ -31,14 +31,14 @@ const Blog = ({ id, title, category, tags }: BlogProps) => {
   const hasTags = !!tags && tags.length > 0;
 
   return (
-    <tr className="border-b border-white/10 hover:bg-white/[0.03] transition-colors">
+    <tr className="border-b border-line hover:bg-surface transition-colors">
       {/* ===================== */}
       {/* Mobile: 2列（タイトル / カテゴリ&タグ） */}
       {/* ===================== */}
       <td className="px-4 py-3 align-top md:hidden">
         <Link
           href={`/blogs/${id}`}
-          className="block font-medium text-zinc-100 hover:underline leading-snug line-clamp-2"
+          className="block font-medium text-ink hover:underline leading-snug line-clamp-2"
         >
           {title}
         </Link>
@@ -53,7 +53,7 @@ const Blog = ({ id, title, category, tags }: BlogProps) => {
               <span>{categoryName}</span>
             </Pill>
           ) : (
-            <span className="text-xs text-zinc-500">-</span>
+            <span className="text-xs text-muted">-</span>
           )}
         </div>
 
@@ -62,12 +62,12 @@ const Blog = ({ id, title, category, tags }: BlogProps) => {
           {hasTags ? (
             tags!.map((tag) => (
               <Pill key={tag.id} href={`/tags/${encodeURIComponent(tag.name)}`}>
-                <span className="text-zinc-400">#</span>
+                <span className="text-muted">#</span>
                 <span>{tag.name}</span>
               </Pill>
             ))
           ) : (
-            <span className="text-xs text-zinc-500">-</span>
+            <span className="text-xs text-muted">-</span>
           )}
         </div>
       </td>
@@ -78,7 +78,7 @@ const Blog = ({ id, title, category, tags }: BlogProps) => {
       <td className="hidden md:table-cell px-4 py-3 text-left align-top">
         <Link
           href={`/blogs/${id}`}
-          className="block font-medium text-zinc-100 hover:underline leading-snug line-clamp-2"
+          className="block font-medium text-ink hover:underline leading-snug line-clamp-2"
         >
           {title}
         </Link>
@@ -91,7 +91,7 @@ const Blog = ({ id, title, category, tags }: BlogProps) => {
             <span>{categoryName}</span>
           </Pill>
         ) : (
-          <span className="text-zinc-500">-</span>
+          <span className="text-muted">-</span>
         )}
       </td>
 
@@ -100,13 +100,13 @@ const Blog = ({ id, title, category, tags }: BlogProps) => {
           <div className="flex flex-wrap justify-end gap-1">
             {tags!.map((tag) => (
               <Pill key={tag.id} href={`/tags/${encodeURIComponent(tag.name)}`}>
-                <span className="text-zinc-400">#</span>
+                <span className="text-muted">#</span>
                 <span>{tag.name}</span>
               </Pill>
             ))}
           </div>
         ) : (
-          <span className="text-zinc-500">-</span>
+          <span className="text-muted">-</span>
         )}
       </td>
     </tr>

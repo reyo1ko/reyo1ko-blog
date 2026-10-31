@@ -1,61 +1,39 @@
-import React from "react";
-
+import Link from "next/link";
+import PixelIcon from "../PixelIcon";
 type Props = {
   title: string;
   description?: string;
-  steps?: React.ReactNode; // <li>...</li> を渡す
-  stepsTitle?: string; // 例: "使い方"
-  stepsVariant?: "ordered" | "unordered"; // 番号 or 箇条書き
-  align?: "left" | "center"; // header で中央寄せしたい
-  size?: "default" | "hero"; // 大きめタイトル用
+  steps?: React.ReactNode;
+  stepsTitle?: string;
+  stepsVariant?: "ordered" | "unordered";
+  align?: "left" | "center";
+  size?: "default" | "hero";
   className?: string;
 };
-
 export default function ToolHeader({
   title,
   description,
   steps,
   stepsTitle = "使い方",
-  stepsVariant = "ordered",
-  align = "center",
-  size = "hero",
+  stepsVariant = "unordered",
   className = "",
 }: Props) {
-  const isCenter = align === "center";
-
-  const titleClass =
-    size === "hero"
-      ? "text-3xl sm:text-4xl font-semibold text-zinc-100"
-      : "text-2xl font-semibold text-zinc-100";
-
-  const descClass =
-    size === "hero"
-      ? "text-base sm:text-lg text-zinc-400"
-      : "text-sm text-zinc-400";
-
-  const wrap = isCenter ? "text-center" : "text-left";
-  const stepsWrap = isCenter ? "mx-auto" : "";
-
-  const ListTag = stepsVariant === "ordered" ? "ol" : "ul";
-  const listClass =
-    stepsVariant === "ordered"
-      ? "list-decimal list-inside space-y-1"
-      : "list-disc list-inside pl-5 space-y-1";
-
+  const List = stepsVariant === "ordered" ? "ol" : "ul";
   return (
-    <header className={`${wrap} ${className}`}>
-      <h1 className={`${titleClass} mb-4`}>{title}</h1>
-
-      {description && <p className={`${descClass} mb-6`}>{description}</p>}
-
+    <header className={"page-heading tool-heading " + className}>
+      <Link className="back-link" href="/useful_tools">
+        ← 便利ツール一覧
+      </Link>
+      <div className="eyebrow">
+        <PixelIcon name="tools" /> EVERYDAY TOOL
+      </div>
+      <h1>{title}</h1>
+      {description && <p>{description}</p>}
       {steps && (
-        <div className={`text-sm text-zinc-500 ${stepsWrap}`}>
-          {stepsTitle ? (
-            <div className="mb-2 font-semibold text-zinc-400">{stepsTitle}</div>
-          ) : null}
-
-          <ListTag className={listClass}>{steps}</ListTag>
-        </div>
+        <details className="usage-guide">
+          <summary>{stepsTitle || "使い方"}</summary>
+          <List>{steps}</List>
+        </details>
       )}
     </header>
   );

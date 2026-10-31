@@ -9,17 +9,9 @@ const Conversion = () => {
   // Function to handle conversion
   const handleConversion = () => {
     if (conversionType === "toDecimal") {
-      const [hours, minutes] = inputValue
-        .split(":")
-        .map((num) => parseInt(num, 10));
+      const [hours, minutes] = inputValue.split(":").map((num) => parseInt(num, 10));
 
-      if (
-        isNaN(hours) ||
-        isNaN(minutes) ||
-        hours < 0 ||
-        minutes < 0 ||
-        minutes >= 60
-      ) {
+      if (isNaN(hours) || isNaN(minutes) || hours < 0 || minutes < 0 || minutes >= 60) {
         alert("無効な入力です。正しい形式で時間を入力してください。");
         return;
       }
@@ -70,15 +62,14 @@ const Conversion = () => {
 
       <div className="mb-4 text-center">
         {conversionType === "toDecimal" && <p>例: 13:45 (13時間45分を入力)</p>}
-        {conversionType === "toSexagesimal" && (
-          <p>例: 13.75 (13.75時間を入力)</p>
-        )}
+        {conversionType === "toSexagesimal" && <p>例: 13.75 (13.75時間を入力)</p>}
       </div>
 
       <div className="flex items-center mb-6 w-full max-w-2xl">
         <div className="flex-1">
           {conversionType === "toDecimal" ? (
             <input
+              aria-label="変換する値"
               type="time"
               step="60"
               value={inputValue}
@@ -87,6 +78,7 @@ const Conversion = () => {
             />
           ) : (
             <input
+              aria-label="変換する値"
               type="number"
               step="0.01"
               value={inputValue}
@@ -99,7 +91,7 @@ const Conversion = () => {
         <div className="mx-4">
           <button
             onClick={handleConversion}
-            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+            className="bg-strong text-on-strong p-2 rounded hover:bg-strong"
           >
             変換
           </button>

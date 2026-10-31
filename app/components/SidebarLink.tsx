@@ -23,16 +23,14 @@ export default function SidebarLink({
       className={[
         "group flex items-center gap-2",
         "rounded-md px-2 py-1.5",
-        "text-sm text-zinc-100",
-        "hover:bg-white/[0.06] active:bg-white/10",
+        "text-sm text-ink",
+        "hover:bg-soft active:bg-soft",
         "transition-colors select-none",
         className,
       ].join(" ")}
     >
       {icon && (
-        <span className="w-5 shrink-0 text-zinc-400 group-hover:text-zinc-200">
-          {icon}
-        </span>
+        <span className="w-5 shrink-0 text-muted group-hover:text-ink">{icon}</span>
       )}
 
       <span className="min-w-0 flex-1 truncate">{children}</span>

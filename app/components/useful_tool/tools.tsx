@@ -12,7 +12,7 @@ export type ToolGroup = {
 
 export const TOOL_GROUPS: ToolGroup[] = [
   {
-    title: "単位変換系",
+    title: "単位・時間の変換",
     description: "単位や形式を相互に変換するツール群",
     items: [
       {
@@ -33,7 +33,7 @@ export const TOOL_GROUPS: ToolGroup[] = [
     ],
   },
   {
-    title: "ファイル系",
+    title: "ファイルの確認",
     items: [
       {
         title: "簡易ハッシュ差分チェッカー",
@@ -43,7 +43,7 @@ export const TOOL_GROUPS: ToolGroup[] = [
     ],
   },
   {
-    title: "テキスト処理系",
+    title: "テキストの編集・変換",
     items: [
       {
         title: "差分チェッカー",
@@ -62,8 +62,7 @@ export const TOOL_GROUPS: ToolGroup[] = [
       },
       {
         title: "改行コード判定・変換",
-        description:
-          "改行コード（LF / CRLF / CR）を判定し、任意の形式に変換します",
+        description: "改行コード（LF / CRLF / CR）を判定し、任意の形式に変換します",
         href: "/useful_tools/newLine",
       },
       {
@@ -74,7 +73,7 @@ export const TOOL_GROUPS: ToolGroup[] = [
     ],
   },
   {
-    title: "その他便利ツール",
+    title: "計算・抽選・画像",
     items: [
       {
         title: "会費計算機",

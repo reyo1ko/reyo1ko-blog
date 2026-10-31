@@ -23,7 +23,7 @@ export default async function SidebarItemList({
   const { contents } = await fetcher();
 
   if (!contents || contents.length === 0) {
-    return <p className="px-2 py-1 text-xs text-zinc-500">{emptyText}</p>;
+    return <p className="px-2 py-1 text-xs text-muted">{emptyText}</p>;
   }
 
   return (
@@ -36,12 +36,12 @@ export default async function SidebarItemList({
           className={[
             "group flex items-center gap-2",
             "rounded-md px-2 py-1.5",
-            "text-sm text-zinc-100",
-            "hover:bg-white/[0.06] active:bg-white/10",
+            "text-sm text-ink",
+            "hover:bg-soft active:bg-soft",
             "transition-colors select-none",
           ].join(" ")}
         >
-          <span className="w-5 shrink-0 text-zinc-400 group-hover:text-zinc-200">
+          <span className="w-5 shrink-0 text-muted group-hover:text-ink">
             {iconByVariant[variant]}
           </span>
 

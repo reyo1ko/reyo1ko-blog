@@ -50,19 +50,14 @@ export function calcTextStats(text: string): TextStats {
  * - beforeParts: delete を赤ハイライト
  * - afterParts : insert を緑ハイライト
  */
-export function diffChars(
-  beforeText: string,
-  afterText: string
-): CharDiffResult {
+export function diffChars(beforeText: string, afterText: string): CharDiffResult {
   const a = Array.from(beforeText.replace(/\r\n/g, "\n"));
   const b = Array.from(afterText.replace(/\r\n/g, "\n"));
 
   const m = a.length;
   const n = b.length;
 
-  const dp: number[][] = Array.from({ length: m + 1 }, () =>
-    Array(n + 1).fill(0)
-  );
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
 
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {

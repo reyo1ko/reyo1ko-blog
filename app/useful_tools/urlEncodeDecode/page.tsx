@@ -47,8 +47,7 @@ export default function Page() {
     setHash(u.hash || "");
 
     // エンコードされたbaseURL
-    const encodedBase =
-      (u.origin === "https://dummy.local" ? "" : u.origin) + u.pathname;
+    const encodedBase = (u.origin === "https://dummy.local" ? "" : u.origin) + u.pathname;
     setEncodedBaseUrl(encodedBase);
 
     // デコードされたbaseURL
@@ -85,9 +84,7 @@ export default function Page() {
   }, [decodedBaseUrl, pairs, hash]);
 
   const updatePair = (idx: number, patch: Partial<KV>) => {
-    setPairs((prev) =>
-      prev.map((p, i) => (i === idx ? { ...p, ...patch } : p)),
-    );
+    setPairs((prev) => prev.map((p, i) => (i === idx ? { ...p, ...patch } : p)));
   };
 
   const addPair = () => setPairs((prev) => [...prev, { key: "", value: "" }]);
@@ -103,8 +100,8 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-900">
-      <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="min-h-0 bg-surface">
+      <div className="tool-page-inner">
         <ToolHeader
           title="URLエンコード・デコードツール"
           description="URLのクエリ（パラメータ）を検出して、編集・追加・削除し、エンコード済みURLを生成します。"
@@ -112,9 +109,7 @@ export default function Page() {
           className="mb-12"
           steps={
             <>
-              <li>
-                URL全体を入力欄に貼り付け、「クエリ検出」ボタンを押します。
-              </li>
+              <li>URL全体を入力欄に貼り付け、「クエリ検出」ボタンを押します。</li>
               <li>クエリ一覧が表示されるので、編集・追加・削除が可能です。</li>
               <li>
                 「生成URL」欄にエンコード済みのURLが表示されます。必要に応じてコピーして利用してください。
@@ -124,43 +119,45 @@ export default function Page() {
         />
 
         {/* 入力セクション */}
-        <section className="mb-12 bg-white/[0.02] rounded-md p-6 border border-white/10">
+        <section className="mb-12 bg-surface rounded-md p-6 border border-line">
           <div className="flex items-center justify-between gap-3 mb-3">
-            <h2 className="text-2xl font-semibold text-zinc-100">入力</h2>
+            <h2 className="text-2xl font-semibold text-ink">入力</h2>
             <button
               onClick={clearAll}
-              className="px-3 py-1.5 rounded-md border border-white/10 bg-white/[0.02] text-zinc-300 hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-zinc-500"
+              className="px-3 py-1.5 rounded-md border border-line bg-surface text-ink hover:bg-soft focus:outline-none focus:ring-2 focus:ring-accent"
             >
               クリア
             </button>
           </div>
 
-          <label className="block text-sm font-semibold text-zinc-300 mb-1">
+          <label className="block text-sm font-semibold text-ink mb-1">
             URLを貼り付け
           </label>
           <textarea
+            aria-label="変換するURL"
             value={raw}
             onChange={(e) => setRaw(e.target.value)}
             rows={3}
-            className="w-full bg-white/[0.02] border border-white/10 rounded-md px-3 py-2 font-mono text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+            className="w-full bg-surface border border-line rounded-md px-3 py-2 font-mono text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent"
             placeholder="https://example.com/path?name=%E9%88%B4%E6%9C%A8&msg=hello%20world"
           />
 
           <div className="mt-3 flex gap-2">
             <button
               onClick={detect}
-              className="px-3 py-1.5 rounded-md bg-zinc-700 text-zinc-100 hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+              className="px-3 py-1.5 rounded-md bg-strong text-on-strong hover:bg-strong focus:outline-none focus:ring-2 focus:ring-accent"
             >
               クエリ検出
             </button>
           </div>
 
-          <div className="mt-6 border-t border-white/10 pt-4 space-y-4">
+          <div className="mt-6 border-t border-line pt-4 space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-zinc-300 mb-1">
+              <label className="block text-sm font-semibold text-ink mb-1">
                 エンコードされたbaseURL
               </label>
               <input
+                aria-label="エンコードされたベースURL"
                 value={encodedBaseUrl}
                 onChange={(e) => {
                   setEncodedBaseUrl(e.target.value);
@@ -172,19 +169,20 @@ export default function Page() {
                     setDecodedBaseUrl(e.target.value);
                   }
                 }}
-                className="w-full bg-white/[0.02] border border-white/10 rounded-md px-3 py-2 font-mono text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                className="w-full bg-surface border border-line rounded-md px-3 py-2 font-mono text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent"
                 placeholder="http://xn--bdk1d3b.net/%E3%81%AC%E3%82%8B%E3%81%BD.html"
               />
-              <p className="text-xs text-zinc-500 mt-1">
+              <p className="text-xs text-muted mt-1">
                 エンコードされたURLを入力してください。自動でデコードされたバージョンが下に表示されます。
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-zinc-300 mb-1">
+              <label className="block text-sm font-semibold text-ink mb-1">
                 デコードされたbaseURL
               </label>
               <input
+                aria-label="デコードされたベースURL"
                 value={decodedBaseUrl}
                 onChange={(e) => {
                   setDecodedBaseUrl(e.target.value);
@@ -197,34 +195,35 @@ export default function Page() {
                     setEncodedBaseUrl(e.target.value);
                   }
                 }}
-                className="w-full bg-white/[0.02] border border-white/10 rounded-md px-3 py-2 font-mono text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                className="w-full bg-surface border border-line rounded-md px-3 py-2 font-mono text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent"
                 placeholder="http://ツール.net/ぬるぽ.html"
               />
-              <p className="text-xs text-zinc-500 mt-1">
+              <p className="text-xs text-muted mt-1">
                 デコードされたURLを入力してください。自動でエンコードされたバージョンが上に表示されます。
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-zinc-300 mb-1">
+              <label className="block text-sm font-semibold text-ink mb-1">
                 hash（任意）
               </label>
               <input
+                aria-label="URLのハッシュ"
                 value={hash}
                 onChange={(e) => setHash(e.target.value)}
-                className="w-full bg-white/[0.02] border border-white/10 rounded-md px-3 py-2 font-mono text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                className="w-full bg-surface border border-line rounded-md px-3 py-2 font-mono text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent"
                 placeholder="#section"
               />
             </div>
 
-            <div className="border-t border-white/10 pt-4">
+            <div className="border-t border-line pt-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-zinc-300">
+                <span className="text-sm font-semibold text-ink">
                   クエリ一覧（編集可）
                 </span>
                 <button
                   onClick={addPair}
-                  className="px-3 py-1.5 rounded-md border border-white/10 bg-white/[0.02] text-zinc-300 hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                  className="px-3 py-1.5 rounded-md border border-line bg-surface text-ink hover:bg-soft focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   + 追加
                 </button>
@@ -232,31 +231,31 @@ export default function Page() {
 
               <div className="space-y-2">
                 {pairs.length === 0 && (
-                  <p className="text-sm text-zinc-500">クエリがありません。</p>
+                  <p className="text-sm text-muted">クエリがありません。</p>
                 )}
 
                 {pairs.map((p, idx) => (
                   <div
                     key={idx}
-                    className="flex gap-2 bg-white/[0.02] rounded-md p-2 hover:bg-white/[0.05]"
+                    className="flex gap-2 bg-surface rounded-md p-2 hover:bg-soft"
                   >
                     <input
+                      aria-label="クエリパラメーターのキー"
                       value={p.key}
                       onChange={(e) => updatePair(idx, { key: e.target.value })}
-                      className="w-1/3 bg-white/[0.02] border border-white/10 rounded-md px-2 py-1 font-mono text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                      className="w-1/3 bg-surface border border-line rounded-md px-2 py-1 font-mono text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent"
                       placeholder="key"
                     />
                     <input
+                      aria-label="クエリパラメーターの値"
                       value={p.value}
-                      onChange={(e) =>
-                        updatePair(idx, { value: e.target.value })
-                      }
-                      className="flex-1 bg-white/[0.02] border border-white/10 rounded-md px-2 py-1 font-mono text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                      onChange={(e) => updatePair(idx, { value: e.target.value })}
+                      className="flex-1 bg-surface border border-line rounded-md px-2 py-1 font-mono text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent"
                       placeholder="value (decoded)"
                     />
                     <button
                       onClick={() => removePair(idx)}
-                      className="px-2 py-1 rounded-md border border-white/10 bg-white/[0.02] text-zinc-300 hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                      className="px-2 py-1 rounded-md border border-line bg-surface text-ink hover:bg-soft focus:outline-none focus:ring-2 focus:ring-accent"
                     >
                       削除
                     </button>
@@ -265,25 +264,27 @@ export default function Page() {
               </div>
             </div>
 
-            <div className="border-t border-white/10 pt-4">
-              <label className="block text-sm font-semibold text-zinc-300 mb-1">
+            <div className="border-t border-line pt-4">
+              <label className="block text-sm font-semibold text-ink mb-1">
                 生成URL（エンコード済み）
               </label>
               <textarea
+                aria-label="生成URL（エンコード済み）"
                 value={encodedUrl}
                 readOnly
                 rows={3}
-                className="w-full bg-white/[0.02] border border-white/10 rounded-md px-3 py-2 font-mono text-sm text-zinc-100"
+                className="w-full bg-surface border border-line rounded-md px-3 py-2 font-mono text-sm text-ink"
               />
 
-              <label className="block text-sm font-semibold text-zinc-300 mb-1 mt-4">
+              <label className="block text-sm font-semibold text-ink mb-1 mt-4">
                 表示用プレビュー（デコード寄り）
               </label>
               <textarea
+                aria-label="デコードしたURLのプレビュー"
                 value={decodedPreview}
                 readOnly
                 rows={3}
-                className="w-full bg-white/[0.02] border border-white/10 rounded-md px-3 py-2 font-mono text-sm text-zinc-100"
+                className="w-full bg-surface border border-line rounded-md px-3 py-2 font-mono text-sm text-ink"
               />
             </div>
           </div>

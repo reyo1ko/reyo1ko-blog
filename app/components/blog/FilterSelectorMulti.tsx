@@ -65,7 +65,7 @@ export default function FilterSelectorMulti({
 
   const toggle = (name: string) => {
     setLocal((prev) =>
-      prev.includes(name) ? prev.filter((x) => x !== name) : [...prev, name]
+      prev.includes(name) ? prev.filter((x) => x !== name) : [...prev, name],
     );
   };
 
@@ -92,25 +92,23 @@ export default function FilterSelectorMulti({
         className={[
           "flex w-full min-w-0 items-center gap-1.5",
           "h-7 rounded-md px-2",
-          "border border-white/10 bg-white/[0.02]",
-          "text-[11px] font-medium text-zinc-300",
-          "hover:bg-white/[0.05] transition",
+          "border border-line bg-surface",
+          "text-[11px] font-medium text-ink",
+          "hover:bg-soft transition",
           widthClass,
         ].join(" ")}
       >
-        <span className="text-zinc-400 shrink-0">{label}：</span>
+        <span className="text-muted shrink-0">{label}：</span>
 
-        <span className="min-w-0 flex-1 truncate text-left text-zinc-100">
-          {labelText}
-        </span>
+        <span className="min-w-0 flex-1 truncate text-left text-ink">{labelText}</span>
 
         {selected.length > 0 && modeEnabled ? (
-          <span className="hidden lg:inline text-zinc-500 shrink-0">
+          <span className="hidden lg:inline text-muted shrink-0">
             {mode === "and" ? "AND" : "OR"}
           </span>
         ) : null}
 
-        <span className="text-zinc-600 shrink-0">▾</span>
+        <span className="text-muted shrink-0">▾</span>
       </button>
 
       {open && (
@@ -131,47 +129,45 @@ export default function FilterSelectorMulti({
               "lg:absolute lg:inset-auto lg:mt-2 lg:left-0 lg:top-auto lg:bottom-auto",
               "lg:w-[560px] lg:max-w-none",
               // common
-              "rounded-lg border border-white/10",
-              "bg-zinc-950/70 backdrop-blur",
+              "rounded-lg border border-line",
+              "bg-surface backdrop-blur",
               "overflow-hidden",
               "flex flex-col",
             ].join(" ")}
           >
             {/* ヘッダー */}
-            <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-white/10 shrink-0">
-              <div className="text-[12px] text-zinc-500">
-                {label}を選択（複数可）
-              </div>
-              <div className="text-[12px] text-zinc-500">
-                選択：<span className="text-zinc-300">{local.length}</span> 件
+            <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-line shrink-0">
+              <div className="text-[12px] text-muted">{label}を選択（複数可）</div>
+              <div className="text-[12px] text-muted">
+                選択：<span className="text-ink">{local.length}</span> 件
               </div>
             </div>
 
             {/* モード切替（タグだけ） */}
             {modeEnabled && (
-              <div className="flex items-center gap-2 px-3 py-2 border-b border-white/10 shrink-0">
-                <span className="text-[12px] text-zinc-500">条件</span>
+              <div className="flex items-center gap-2 px-3 py-2 border-b border-line shrink-0">
+                <span className="text-[12px] text-muted">条件</span>
 
-                <div className="inline-flex rounded-md border border-white/10 bg-white/[0.02] overflow-hidden">
+                <div className="inline-flex rounded-md border border-line bg-surface overflow-hidden">
                   <button
                     type="button"
                     onClick={() => setLocalMode("or")}
                     className={[
                       "h-7 px-3 text-[12px] font-semibold transition",
-                      "text-zinc-300 hover:bg-white/[0.05]",
-                      localMode === "or" ? "bg-white/[0.05]" : "",
+                      "text-ink hover:bg-soft",
+                      localMode === "or" ? "bg-soft" : "",
                     ].join(" ")}
                   >
                     OR
                   </button>
-                  <div className="w-px bg-white/10" />
+                  <div className="w-px bg-soft" />
                   <button
                     type="button"
                     onClick={() => setLocalMode("and")}
                     className={[
                       "h-7 px-3 text-[12px] font-semibold transition",
-                      "text-zinc-300 hover:bg-white/[0.05]",
-                      localMode === "and" ? "bg-white/[0.05]" : "",
+                      "text-ink hover:bg-soft",
+                      localMode === "and" ? "bg-soft" : "",
                     ].join(" ")}
                   >
                     AND
@@ -180,8 +176,8 @@ export default function FilterSelectorMulti({
 
                 <div className="flex-1" />
 
-                <div className="text-[12px] text-zinc-500">
-                  対象：<span className="text-zinc-300">{totalCount}</span> 件
+                <div className="text-[12px] text-muted">
+                  対象：<span className="text-ink">{totalCount}</span> 件
                 </div>
               </div>
             )}
@@ -201,14 +197,12 @@ export default function FilterSelectorMulti({
                         "rounded-md border px-2 py-1.5",
                         "text-[11px] font-medium transition",
                         active
-                          ? "border-white/20 bg-white/[0.06] text-zinc-100"
-                          : "border-white/10 bg-white/[0.02] text-zinc-300 hover:bg-white/[0.05]",
+                          ? "border-line bg-soft text-ink"
+                          : "border-line bg-surface text-ink hover:bg-soft",
                       ].join(" ")}
                     >
                       <span className="truncate">{it.name}</span>
-                      <span className="text-zinc-500 shrink-0">
-                        {counts[it.name] ?? 0}
-                      </span>
+                      <span className="text-muted shrink-0">{counts[it.name] ?? 0}</span>
                     </button>
                   );
                 })}
@@ -216,12 +210,12 @@ export default function FilterSelectorMulti({
             </div>
 
             {/* フッター：常に見える */}
-            <div className="flex items-center gap-2 px-3 py-2 border-t border-white/10 shrink-0">
+            <div className="flex items-center gap-2 px-3 py-2 border-t border-line shrink-0">
               <button
                 type="button"
                 onClick={clear}
-                className="h-8 rounded-md px-3 border border-white/10 bg-white/[0.02]
-                           text-[12px] font-semibold text-zinc-300 hover:bg-white/[0.05] transition"
+                className="h-8 rounded-md px-3 border border-line bg-surface
+                           text-[12px] font-semibold text-ink hover:bg-soft transition"
               >
                 解除
               </button>
@@ -231,8 +225,8 @@ export default function FilterSelectorMulti({
               <button
                 type="button"
                 onClick={apply}
-                className="h-8 rounded-md px-3 border border-white/10 bg-white/[0.02]
-                           text-[12px] font-semibold text-zinc-100 hover:bg-white/[0.05] transition"
+                className="h-8 rounded-md px-3 border border-line bg-surface
+                           text-[12px] font-semibold text-ink hover:bg-soft transition"
               >
                 適用
               </button>

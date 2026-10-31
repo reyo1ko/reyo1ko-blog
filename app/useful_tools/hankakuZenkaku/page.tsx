@@ -91,8 +91,8 @@ const HankakuZenkakuPage = () => {
       : "例: ＡＢＣ　１２３　！？\n全角の英数字・記号・スペースを半角に変換します。";
 
   return (
-    <div className="min-h-screen bg-zinc-900">
-      <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="min-h-0 bg-surface">
+      <div className="tool-page-inner">
         <ToolHeader
           title="半角・全角 変換ツール"
           description="テキストの半角英数字・記号・スペースを全角に、または全角から半角に一括変換できます。"
@@ -105,21 +105,17 @@ const HankakuZenkakuPage = () => {
               <li>
                 「変換」ボタンを押すと、出力テキストエリアに変換結果が表示されます。
               </li>
-              <li>
-                必要に応じて「クリア」ボタンで入力・出力をリセットできます。
-              </li>
+              <li>必要に応じて「クリア」ボタンで入力・出力をリセットできます。</li>
             </>
           }
         />
 
         {/* モード選択セクション */}
-        <section className="mb-12 bg-white/[0.02] rounded-md p-6 border border-white/10">
-          <h2 className="text-2xl font-semibold text-zinc-100 mb-4">
-            変換モード
-          </h2>
+        <section className="mb-12 bg-surface rounded-md p-6 border border-line">
+          <h2 className="text-2xl font-semibold text-ink mb-4">変換モード</h2>
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <div className="flex gap-4">
-              <label className="flex items-center text-sm md:text-base text-zinc-300">
+              <label className="flex items-center text-sm md:text-base text-ink">
                 <input
                   type="radio"
                   value="toZenkaku"
@@ -128,11 +124,11 @@ const HankakuZenkakuPage = () => {
                     setMode("toZenkaku");
                     setOutput("");
                   }}
-                  className="mr-1 bg-white/[0.02] border-white/10 text-zinc-100 focus:ring-zinc-500"
+                  className="mr-1 bg-surface border-line text-ink focus:ring-accent"
                 />
                 半角 → 全角
               </label>
-              <label className="flex items-center text-sm md:text-base text-zinc-300">
+              <label className="flex items-center text-sm md:text-base text-ink">
                 <input
                   type="radio"
                   value="toHankaku"
@@ -141,12 +137,12 @@ const HankakuZenkakuPage = () => {
                     setMode("toHankaku");
                     setOutput("");
                   }}
-                  className="mr-1 bg-white/[0.02] border-white/10 text-zinc-100 focus:ring-zinc-500"
+                  className="mr-1 bg-surface border-line text-ink focus:ring-accent"
                 />
                 全角 → 半角
               </label>
             </div>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-muted">
               対象:
               英数字・記号・スペースのみ変換します。ひらがな・カタカナ・漢字は変化しません。
             </p>
@@ -154,25 +150,22 @@ const HankakuZenkakuPage = () => {
         </section>
 
         {/* テキスト変換セクション */}
-        <section className="mb-12 bg-white/[0.02] rounded-md p-6 border border-white/10">
-          <h2 className="text-2xl font-semibold text-zinc-100 mb-4">
-            テキスト変換
-          </h2>
+        <section className="mb-12 bg-surface rounded-md p-6 border border-line">
+          <h2 className="text-2xl font-semibold text-ink mb-4">テキスト変換</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* 入力エリア */}
             <div className="flex flex-col">
-              <label className="text-sm font-semibold text-zinc-300 mb-2">
+              <label className="text-sm font-semibold text-ink mb-2">
                 入力テキスト
-                <span className="ml-2 text-xs text-zinc-500">
-                  文字数: {inputLength}
-                </span>
+                <span className="ml-2 text-xs text-muted">文字数: {inputLength}</span>
               </label>
               <textarea
+                aria-label="入力テキスト"
                 rows={8}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="w-full bg-white/[0.02] border border-white/10 rounded-md p-2 text-sm font-mono text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 resize-y"
+                className="w-full bg-surface border border-line rounded-md p-2 text-sm font-mono text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent resize-y"
                 placeholder={placeholderInput}
               />
             </div>
@@ -180,19 +173,18 @@ const HankakuZenkakuPage = () => {
             {/* 出力エリア */}
             <div className="flex flex-col">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-semibold text-zinc-300">
+                <label className="text-sm font-semibold text-ink">
                   出力テキスト
-                  <span className="ml-2 text-xs text-zinc-500">
-                    文字数: {outputLength}
-                  </span>
+                  <span className="ml-2 text-xs text-muted">文字数: {outputLength}</span>
                 </label>
                 <CopyButton text={output} />
               </div>
               <textarea
+                aria-label="変換結果"
                 rows={8}
                 value={output}
                 readOnly
-                className="w-full bg-white/[0.02] border border-white/10 rounded-md p-2 text-sm font-mono text-zinc-100 bg-zinc-800 resize-y"
+                className="w-full bg-surface border border-line rounded-md p-2 text-sm font-mono text-ink bg-surface resize-y"
                 placeholder="変換結果がここに表示されます。"
               />
             </div>
@@ -203,14 +195,14 @@ const HankakuZenkakuPage = () => {
             <button
               type="button"
               onClick={handleConvert}
-              className="px-4 py-2 bg-zinc-700 text-zinc-100 rounded-md hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-500 text-sm"
+              className="px-4 py-2 bg-strong text-on-strong rounded-md hover:bg-strong focus:outline-none focus:ring-2 focus:ring-accent text-sm"
             >
               変換
             </button>
             <button
               type="button"
               onClick={handleClear}
-              className="px-4 py-2 border border-white/10 bg-white/[0.02] text-zinc-300 rounded-md hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-zinc-500 text-sm"
+              className="px-4 py-2 border border-line bg-surface text-ink rounded-md hover:bg-soft focus:outline-none focus:ring-2 focus:ring-accent text-sm"
             >
               クリア
             </button>
@@ -218,9 +210,9 @@ const HankakuZenkakuPage = () => {
         </section>
 
         {/* 使用例セクション */}
-        <section className="bg-white/[0.02] rounded-md p-6 border border-white/10">
-          <h2 className="text-2xl font-semibold text-zinc-100 mb-3">使用例</h2>
-          <ul className="list-disc list-inside text-sm text-zinc-300 space-y-1">
+        <section className="bg-surface rounded-md p-6 border border-line">
+          <h2 className="text-2xl font-semibold text-ink mb-3">使用例</h2>
+          <ul className="list-disc list-inside text-sm text-ink space-y-1">
             <li>システム入力欄に合わせて半角英数字に統一する</li>
             <li>資料やメールで全角英数字に揃えたい場合に一括変換する</li>
             <li>スペースの全角・半角の混在を解消する</li>

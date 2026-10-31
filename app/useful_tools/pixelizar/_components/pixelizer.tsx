@@ -148,7 +148,7 @@ export default function Pixelizer() {
       setStatus(`変換しました（${smallW}×${smallH} をポストカード比率で出力）`);
     } else {
       setStatus(
-        `変換しました（${off.width}×${off.height} → ${canvas.width}×${canvas.height}）`
+        `変換しました（${off.width}×${off.height} → ${canvas.width}×${canvas.height}）`,
       );
     }
   }
@@ -207,20 +207,20 @@ export default function Pixelizer() {
   }
 
   return (
-    <section className="rounded-md border border-white/10 bg-white/[0.02]">
+    <section className="rounded-md border border-line bg-surface">
       {/* 上部：見出し行 */}
-      <div className="border-b border-white/10 px-4 py-3 md:px-5">
+      <div className="border-b border-line px-4 py-3 md:px-5">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div className="space-y-0.5">
             <div className="text-sm font-semibold">設定</div>
-            <div className="text-xs text-zinc-400">{status}</div>
+            <div className="text-xs text-muted">{status}</div>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={resetAll}
-              className="rounded-md border border-white/10 bg-white/[0.02] px-3 py-1.5 text-sm text-zinc-200 hover:bg-white/[0.05]"
+              className="rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink hover:bg-soft"
             >
               リセット
             </button>
@@ -228,7 +228,7 @@ export default function Pixelizer() {
               type="button"
               onClick={downloadPng}
               disabled={!canProcess}
-              className="rounded-md border border-white/10 bg-white/[0.02] px-3 py-1.5 text-sm text-zinc-200 hover:bg-white/[0.05] disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink hover:bg-soft disabled:cursor-not-allowed disabled:opacity-50"
             >
               PNGで保存
             </button>
@@ -237,108 +237,100 @@ export default function Pixelizer() {
       </div>
 
       {/* 行UI */}
-      <div className="divide-y divide-white/10">
+      <div className="divide-y divide-line">
         {/* 行：画像 */}
-        <div className="group flex flex-col gap-3 px-4 py-4 hover:bg-white/[0.05] md:flex-row md:items-center md:px-5">
+        <div className="group flex flex-col gap-3 px-4 py-4 hover:bg-soft md:flex-row md:items-center md:px-5">
           <div className="w-full md:w-56">
             <div className="text-sm font-semibold">画像</div>
-            <div className="text-xs text-zinc-400">PNG / JPG / WebP など</div>
+            <div className="text-xs text-muted">PNG / JPG / WebP など</div>
           </div>
 
           <div className="flex w-full items-center gap-3">
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-white/10 bg-white/[0.02] px-3 py-1.5 text-sm text-zinc-200 hover:bg-white/[0.05]">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink hover:bg-soft">
               <input
+                aria-label="変換する画像"
                 type="file"
                 accept="image/*"
-                className="hidden"
+                className="sr-only"
                 onChange={(e) => onPickFile(e.target.files?.[0])}
               />
               画像を選択
             </label>
 
             <div className="min-w-0 flex-1">
-              <div className="truncate text-sm text-zinc-300">
+              <div className="truncate text-sm text-ink">
                 {fileName ? fileName : "未選択"}
               </div>
               {srcUrl ? (
-                <div className="text-xs text-zinc-500">選択済み</div>
+                <div className="text-xs text-muted">選択済み</div>
               ) : (
-                <div className="text-xs text-zinc-500">
-                  画像を選択すると自動で変換します
-                </div>
+                <div className="text-xs text-muted">画像を選択すると自動で変換します</div>
               )}
             </div>
           </div>
         </div>
 
         {/* 行：出力サイズ */}
-        <div className="group flex flex-col gap-3 px-4 py-4 hover:bg-white/[0.05] md:flex-row md:items-center md:px-5">
+        <div className="group flex flex-col gap-3 px-4 py-4 hover:bg-soft md:flex-row md:items-center md:px-5">
           <div className="w-full md:w-56">
             <div className="text-sm font-semibold">出力サイズ</div>
-            <div className="text-xs text-zinc-400">
-              縦向き・横向きを選べます
-            </div>
+            <div className="text-xs text-muted">縦向き・横向きを選べます</div>
           </div>
 
           <div className="flex w-full flex-col gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              {(["なし", "縦（100×148）", "横（148×100）"] as const).map(
-                (m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => setPostcardMode(m)}
-                    disabled={!canProcess}
-                    className={[
-                      "rounded-md border px-3 py-1.5 text-sm hover:bg-white/[0.05] disabled:opacity-50",
-                      m === postcardMode
-                        ? "border-white/20 bg-white/[0.04] text-zinc-100"
-                        : "border-white/10 bg-white/[0.02] text-zinc-200",
-                    ].join(" ")}
-                  >
-                    {m === "なし"
-                      ? "通常"
-                      : m === "縦（100×148）"
+              {(["なし", "縦（100×148）", "横（148×100）"] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  aria-pressed={m === postcardMode}
+                  onClick={() => setPostcardMode(m)}
+                  disabled={!canProcess}
+                  className={[
+                    "rounded-md border px-3 py-1.5 text-sm hover:bg-soft disabled:opacity-50",
+                    m === postcardMode
+                      ? "border-accent bg-soft text-accent"
+                      : "border-line bg-surface text-ink",
+                  ].join(" ")}
+                >
+                  {m === "なし"
+                    ? "通常"
+                    : m === "縦（100×148）"
                       ? "ポストカード（縦）"
                       : "ポストカード（横）"}
-                  </button>
-                )
-              )}
+                </button>
+              ))}
             </div>
 
             <div className="flex items-center gap-3">
               <input
+                aria-label="出力サイズの長辺"
                 type="range"
                 min={32}
                 max={256}
                 value={postcardLongEdge}
-                onChange={(e) =>
-                  setPostcardLongEdge(parseInt(e.target.value, 10))
-                }
+                onChange={(e) => setPostcardLongEdge(parseInt(e.target.value, 10))}
                 disabled={!canProcess || postcardMode === "なし"}
                 className="w-full accent-zinc-200 disabled:opacity-50"
               />
-              <div className="w-16 text-right text-sm text-zinc-300">
-                {postcardLongEdge}
-              </div>
+              <div className="w-16 text-right text-sm text-ink">{postcardLongEdge}</div>
             </div>
 
-            <div className="text-xs text-zinc-500">
-              値を小さくすると粗くなります
-            </div>
+            <div className="text-xs text-muted">値を小さくすると粗くなります</div>
           </div>
         </div>
 
         {/* 行：粗さ */}
-        <div className="group flex flex-col gap-3 px-4 py-4 hover:bg-white/[0.05] md:flex-row md:items-center md:px-5">
+        <div className="group flex flex-col gap-3 px-4 py-4 hover:bg-soft md:flex-row md:items-center md:px-5">
           <div className="w-full md:w-56">
             <div className="text-sm font-semibold">粗さ</div>
-            <div className="text-xs text-zinc-400">小さいほど粗くなります</div>
+            <div className="text-xs text-muted">小さいほど粗くなります</div>
           </div>
 
           <div className="flex w-full flex-col gap-2">
             <div className="flex items-center gap-3">
               <input
+                aria-label="ピクセルの粗さ"
                 type="range"
                 min={8}
                 max={256}
@@ -347,9 +339,7 @@ export default function Pixelizer() {
                 disabled={!canProcess || postcardMode !== "なし"}
                 className="w-full accent-zinc-200 disabled:opacity-50"
               />
-              <div className="w-16 text-right text-sm text-zinc-300">
-                {pixelWidth}
-              </div>
+              <div className="w-16 text-right text-sm text-ink">{pixelWidth}</div>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
@@ -357,13 +347,14 @@ export default function Pixelizer() {
                 <button
                   key={m}
                   type="button"
+                  aria-pressed={m === fitMode}
                   onClick={() => setFitMode(m)}
                   disabled={!canProcess || postcardMode !== "なし"}
                   className={[
-                    "rounded-md border px-3 py-1.5 text-sm hover:bg-white/[0.05] disabled:opacity-50",
+                    "rounded-md border px-3 py-1.5 text-sm hover:bg-soft disabled:opacity-50",
                     m === fitMode
-                      ? "border-white/20 bg-white/[0.04] text-zinc-100"
-                      : "border-white/10 bg-white/[0.02] text-zinc-200",
+                      ? "border-accent bg-soft text-accent"
+                      : "border-line bg-surface text-ink",
                   ].join(" ")}
                 >
                   {m}
@@ -372,7 +363,7 @@ export default function Pixelizer() {
             </div>
 
             {postcardMode !== "なし" ? (
-              <div className="text-xs text-zinc-500">
+              <div className="text-xs text-muted">
                 ポストカード選択中は「粗さ」は出力サイズの値で調整します
               </div>
             ) : null}
@@ -380,16 +371,15 @@ export default function Pixelizer() {
         </div>
 
         {/* 行：拡大率 */}
-        <div className="group flex flex-col gap-3 px-4 py-4 hover:bg-white/[0.05] md:flex-row md:items-center md:px-5">
+        <div className="group flex flex-col gap-3 px-4 py-4 hover:bg-soft md:flex-row md:items-center md:px-5">
           <div className="w-full md:w-56">
             <div className="text-sm font-semibold">拡大率</div>
-            <div className="text-xs text-zinc-400">
-              見た目のサイズだけ変えます
-            </div>
+            <div className="text-xs text-muted">見た目のサイズだけ変えます</div>
           </div>
 
           <div className="flex w-full items-center gap-3">
             <input
+              aria-label="画像の拡大率"
               type="range"
               min={1}
               max={16}
@@ -398,9 +388,7 @@ export default function Pixelizer() {
               disabled={!canProcess}
               className="w-full accent-zinc-200 disabled:opacity-50"
             />
-            <div className="w-16 text-right text-sm text-zinc-300">
-              ×{scale}
-            </div>
+            <div className="w-16 text-right text-sm text-ink">×{scale}</div>
           </div>
         </div>
 
@@ -409,13 +397,13 @@ export default function Pixelizer() {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <div className="text-sm font-semibold">出力</div>
-              <div className="text-xs text-zinc-400">
+              <div className="text-xs text-muted">
                 キャンバスを右クリックでコピーもできます
               </div>
             </div>
           </div>
 
-          <div className="mt-3 overflow-auto rounded-md border border-white/10 bg-white/[0.02] p-3">
+          <div className="mt-3 overflow-auto rounded-md border border-line bg-surface p-3">
             <canvas ref={canvasRef} className="block h-auto max-w-full" />
           </div>
         </div>

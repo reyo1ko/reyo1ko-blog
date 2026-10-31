@@ -72,10 +72,7 @@ function normalizeHashForCompare(str: string) {
 }
 
 // 上下に並べて、不一致箇所をハイライトして表示
-function renderHashDiff(
-  calculated: string | null,
-  input: string
-): JSX.Element | null {
+function renderHashDiff(calculated: string | null, input: string): JSX.Element | null {
   const a = normalizeHashForCompare(calculated ?? "");
   const b = normalizeHashForCompare(input ?? "");
 
@@ -96,42 +93,35 @@ function renderHashDiff(
       <span
         key={`calc-${i}`}
         className={
-          "px-[1px]" +
-          (mismatch && ca ? " bg-red-200 text-red-900 rounded" : "")
+          "px-[1px]" + (mismatch && ca ? " bg-red-200 text-red-900 rounded" : "")
         }
       >
         {ca || "·"}
-      </span>
+      </span>,
     );
 
     inputSpans.push(
       <span
         key={`input-${i}`}
         className={
-          "px-[1px]" +
-          (mismatch && cb ? " bg-red-200 text-red-900 rounded" : "")
+          "px-[1px]" + (mismatch && cb ? " bg-red-200 text-red-900 rounded" : "")
         }
       >
         {cb || "·"}
-      </span>
+      </span>,
     );
   }
 
   return (
-    <div className="mt-3 rounded-md border border-white/10 bg-white/[0.02] px-2 py-2 font-mono text-[11px] whitespace-pre-wrap break-all">
-      <div className="mb-1 text-[10px] text-zinc-500">
-        計算結果（正規化済み）
-      </div>
+    <div className="mt-3 rounded-md border border-line bg-surface px-2 py-2 font-mono text-[11px] whitespace-pre-wrap break-all">
+      <div className="mb-1 text-[10px] text-muted">計算結果（正規化済み）</div>
       <div>{calcSpans}</div>
 
-      <div className="mt-2 mb-1 text-[10px] text-zinc-500">
-        比較対象（正規化済み）
-      </div>
+      <div className="mt-2 mb-1 text-[10px] text-muted">比較対象（正規化済み）</div>
       <div>{inputSpans}</div>
 
-      <div className="mt-2 text-[10px] text-zinc-500">
-        ※
-        空白除去・小文字化後の文字列を比較し、不一致箇所だけ赤くハイライトしています。
+      <div className="mt-2 text-[10px] text-muted">
+        ※ 空白除去・小文字化後の文字列を比較し、不一致箇所だけ赤くハイライトしています。
         一致しない位置は「·」で穴あき表示されます。
       </div>
     </div>
@@ -158,7 +148,7 @@ export default function CompressionToolPage() {
         ratio: null,
         hash: null,
         error: `1GB を超えるファイルはブラウザ上での計測対象外です (${formatBytes(
-          size
+          size,
         )})。大きなファイルは下部のコマンド表を参考に OS のコマンドで確認してください。`,
       });
       return;
@@ -235,15 +225,14 @@ export default function CompressionToolPage() {
   const hasCompressionSupport =
     typeof (globalThis as any).CompressionStream !== "undefined";
 
-  const estimatedDecompressedSize =
-    result && result.size > 0 ? result.size : null; // 今回は元サイズを「展開サイズ」として表示
+  const estimatedDecompressedSize = result && result.size > 0 ? result.size : null; // 今回は元サイズを「展開サイズ」として表示
 
   // ハッシュ比較ステータス
   const hashStatus = compareHash(result?.hash ?? null, compareHashInput);
 
   return (
-    <div className="min-h-screen bg-zinc-900">
-      <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="min-h-0 bg-surface">
+      <div className="tool-page-inner">
         <ToolHeader
           title="ファイル圧縮率＆ハッシュ計測ツール"
           description="ファイルをドラッグ＆ドロップするだけで、gzip 圧縮後のサイズと圧縮率、SHA-256 ハッシュをブラウザ上で計測します。大きなファイルも高速に処理可能です。"
@@ -268,13 +257,20 @@ export default function CompressionToolPage() {
         {/* ドロップゾーン */}
         <section
           className={`mb-4 flex cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed px-4 py-10 text-center transition ${
-            dragOver
-              ? "border-zinc-500 bg-white/[0.05]"
-              : "border-white/10 bg-white/[0.02] hover:border-zinc-400"
+            dragOver ? "border-line bg-soft" : "border-line bg-surface hover:border-line"
           }`}
           onDrop={onDrop}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
+          role="button"
+          tabIndex={0}
+          aria-label="確認するファイルを選択またはドロップ"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              document.getElementById("file-input")?.click();
+            }
+          }}
           onClick={() => document.getElementById("file-input")?.click()}
         >
           <input
@@ -283,15 +279,13 @@ export default function CompressionToolPage() {
             className="hidden"
             onChange={onFileInputChange}
           />
-          <p className="text-sm font-semibold text-zinc-300">
+          <p className="text-sm font-semibold text-ink">
             ここにファイルをドラッグ＆ドロップ
           </p>
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-muted">
             クリックしてファイルを選択することもできます
           </p>
-          {isProcessing && (
-            <p className="mt-3 text-xs text-zinc-400">計測中です…</p>
-          )}
+          {isProcessing && <p className="mt-3 text-xs text-muted">計測中です…</p>}
         </section>
 
         {!hasCompressionSupport && (
@@ -302,53 +296,51 @@ export default function CompressionToolPage() {
         )}
 
         {/* 結果表示 */}
-        <section className="mb-8 bg-white/[0.02] rounded-md p-6 border border-white/10">
-          <h2 className="mb-3 text-lg font-semibold text-zinc-100">計測結果</h2>
+        <section className="mb-8 bg-surface rounded-md p-6 border border-line">
+          <h2 className="mb-3 text-lg font-semibold text-ink">計測結果</h2>
 
           {!result ? (
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-muted">
               まだファイルが選択されていません。上のエリアにファイルをドロップしてください。
             </p>
           ) : (
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-zinc-500">ファイル名</span>
-                <span className="font-mono text-zinc-100">
-                  {result.fileName}
-                </span>
+                <span className="text-muted">ファイル名</span>
+                <span className="font-mono text-ink">{result.fileName}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-zinc-500">元サイズ</span>
-                <span className="font-mono text-zinc-100">
+                <span className="text-muted">元サイズ</span>
+                <span className="font-mono text-ink">
                   {formatBytes(result.size)} ({result.size.toLocaleString()} B)
                 </span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-zinc-500">推定展開サイズ</span>
-                <span className="font-mono text-zinc-100">
+                <span className="text-muted">推定展開サイズ</span>
+                <span className="font-mono text-ink">
                   {estimatedDecompressedSize !== null
                     ? `${formatBytes(
-                        estimatedDecompressedSize
+                        estimatedDecompressedSize,
                       )} (${estimatedDecompressedSize.toLocaleString()} B)`
                     : "-"}
                 </span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-zinc-500">gzip 圧縮後サイズ</span>
-                <span className="font-mono text-zinc-100">
+                <span className="text-muted">gzip 圧縮後サイズ</span>
+                <span className="font-mono text-ink">
                   {result.compressedSize !== null
                     ? `${formatBytes(
-                        result.compressedSize
+                        result.compressedSize,
                       )} (${result.compressedSize.toLocaleString()} B)`
                     : "ブラウザ未対応 / 計測不可"}
                 </span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-zinc-500">圧縮率</span>
-                <span className="font-mono text-zinc-100">
+                <span className="text-muted">圧縮率</span>
+                <span className="font-mono text-ink">
                   {result.ratio !== null
                     ? `${(result.ratio * 100).toFixed(2)} %`
                     : "ブラウザ未対応 / 計測不可"}
@@ -356,8 +348,8 @@ export default function CompressionToolPage() {
               </div>
 
               <div className="pt-2">
-                <span className="block text-zinc-500">SHA-256 ハッシュ</span>
-                <div className="mt-1 break-all rounded-md bg-white/[0.02] border border-white/10 px-2 py-1 font-mono text-xs text-zinc-100">
+                <span className="block text-muted">SHA-256 ハッシュ</span>
+                <div className="mt-1 break-all rounded-md bg-surface border border-line px-2 py-1 font-mono text-xs text-ink">
                   {result.hash ?? "-"}
                 </div>
               </div>
@@ -372,24 +364,23 @@ export default function CompressionToolPage() {
         </section>
 
         {/* ハッシュ値比較フォーム */}
-        <section className="mb-10 bg-white/[0.02] rounded-md p-6 border border-white/10">
-          <h2 className="mb-3 text-lg font-semibold text-zinc-100">
-            ハッシュ値比較
-          </h2>
+        <section className="mb-10 bg-surface rounded-md p-6 border border-line">
+          <h2 className="mb-3 text-lg font-semibold text-ink">ハッシュ値比較</h2>
 
-          <p className="mb-2 text-xs text-zinc-500">
-            ダウンロードサイトに記載されているハッシュ値などを貼り付けて、
-            上で計算した SHA-256 と一致しているかを確認できます。
+          <p className="mb-2 text-xs text-muted">
+            ダウンロードサイトに記載されているハッシュ値などを貼り付けて、 上で計算した
+            SHA-256 と一致しているかを確認できます。
             空白と大文字小文字は無視して比較します。
           </p>
 
           <div className="space-y-3 text-sm">
             <div>
-              <label className="mb-1 block text-xs font-semibold text-zinc-300">
+              <label className="mb-1 block text-xs font-semibold text-ink">
                 比較対象ハッシュ値（SHA-256 など）
               </label>
               <textarea
-                className="h-16 w-full rounded-md border border-white/10 bg-white/[0.02] px-2 py-1 text-xs font-mono text-zinc-100 outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500"
+                aria-label="比較対象のハッシュ値"
+                className="h-16 w-full rounded-md border border-line bg-surface px-2 py-1 text-xs font-mono text-ink outline-none focus:border-line focus:ring-1 focus:ring-accent"
                 placeholder="ここに比較したいハッシュ値を貼り付けてください"
                 value={compareHashInput}
                 onChange={(e) => setCompareHashInput(e.target.value)}
@@ -397,18 +388,16 @@ export default function CompressionToolPage() {
             </div>
 
             <div>
-              <div className="mb-1 text-xs text-zinc-500">
-                計算された SHA-256
-              </div>
-              <div className="break-all rounded-md bg-white/[0.02] border border-white/10 px-2 py-1 font-mono text-[11px] text-zinc-100">
+              <div className="mb-1 text-xs text-muted">計算された SHA-256</div>
+              <div className="break-all rounded-md bg-surface border border-line px-2 py-1 font-mono text-[11px] text-ink">
                 {result?.hash ?? "- ファイルを選択するとここに表示されます -"}
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-2">
-              <span className="text-xs text-zinc-500">比較結果</span>
+              <span className="text-xs text-muted">比較結果</span>
               {hashStatus === "none" && (
-                <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-800">
+                <span className="rounded-full bg-soft px-3 py-1 text-xs text-ink">
                   入力が不足しています
                 </span>
               )}
