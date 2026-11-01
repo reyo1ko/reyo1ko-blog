@@ -50,6 +50,7 @@ export default function SidebarTree({
         {nav(homeHref, "ホーム", "home", path === "/")}
         {nav(blogHref, "記事を読む", "article", path === "/blogs")}
         {nav("/useful_tools", "便利ツール", "tools", path === "/useful_tools")}
+        {nav("/materials", "画像素材", "image", path.startsWith("/materials"))}
         <div className="nav-section-label">カテゴリから探す</div>
         {categoryTree.map(({ category }) =>
           nav(
