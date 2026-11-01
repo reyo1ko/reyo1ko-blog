@@ -1,73 +1,84 @@
 "use client";
-
-import { useEffect, useState } from "react";
-
-export default function ResponsiveSidebar({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import PixelIcon from "./PixelIcon";
+export default function ResponsiveSidebar({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
-
+  const dialog = useRef<HTMLDialogElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const path = usePathname();
+  const query = useSearchParams();
   useEffect(() => {
-    const onResize = () => {
-      if (window.matchMedia("(min-width: 768px)").matches) setOpen(false);
+    setOpen(false);
+  }, [path, query]);
+  useEffect(() => {
+    const el = dialog.current;
+    if (!el) return;
+    if (open) {
+      el.showModal();
+      document.body.style.overflow = "hidden";
+    } else if (el.open) {
+      el.close();
+      trigger.current?.focus();
+    }
+    return () => {
+      document.body.style.overflow = "";
     };
-    window.addEventListener("resize", onResize);
-    onResize();
-    return () => window.removeEventListener("resize", onResize);
+  }, [open]);
+  useEffect(() => {
+    const media = matchMedia("(min-width: 1024px)");
+    const close = () => {
+      if (media.matches) setOpen(false);
+    };
+    media.addEventListener("change", close);
+    return () => media.removeEventListener("change", close);
   }, []);
-
   return (
     <>
-      <div className="md:hidden sticky top-0 z-30 border-b border-white/10 bg-app-bg/80 backdrop-blur px-4 py-2">
+      <header className="mobile-header">
+        <a href="/" className="mobile-brand">
+          re<span>.</span> / 仕事を頑張るために
+        </a>
         <button
+          ref={trigger}
+          className="icon-button"
+          aria-label="メニューを開く"
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
           onClick={() => setOpen(true)}
-          className="rounded-md border border-white/10 bg-white/[0.02] px-3 py-1.5 text-sm text-zinc-200 hover:bg-white/[0.05]"
         >
-          メニュー
+          <PixelIcon name="menu" />
         </button>
-      </div>
-
-      {open && (
-        <button
-          aria-label="close sidebar"
-          onClick={() => setOpen(false)}
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
-        />
-      )}
-
-      <aside
-        className={[
-          "fixed inset-y-0 left-0 z-50 md:hidden",
-          "w-[78vw] max-w-[320px]",
-          "border-r border-white/10 bg-zinc-950/80 backdrop-blur",
-          "transition-transform duration-200",
-          open ? "translate-x-0" : "-translate-x-full",
-        ].join(" ")}
+      </header>
+      <aside className="desktop-sidebar" aria-label="サイトナビゲーション">
+        {children}
+      </aside>
+      <dialog
+        ref={dialog}
+        id="mobile-navigation"
+        className="navigation-dialog"
+        aria-label="サイトメニュー"
+        onCancel={() => setOpen(false)}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) setOpen(false);
+        }}
       >
-        <div className="h-full overflow-y-auto p-3">
-          <div className="mb-3 flex justify-end">
-            <button
-              onClick={() => setOpen(false)}
-              className="rounded-md border border-white/10 bg-white/[0.02] px-3 py-1.5 text-sm text-zinc-200 hover:bg-white/[0.05]"
-            >
-              閉じる
-            </button>
-          </div>
+        <div
+          className="dialog-content"
+          onClick={(e) => {
+            if ((e.target as HTMLElement).closest("a")) setOpen(false);
+          }}
+        >
+          <button
+            className="icon-button dialog-close"
+            aria-label="メニューを閉じる"
+            onClick={() => setOpen(false)}
+          >
+            <PixelIcon name="close" />
+          </button>
           {children}
         </div>
-      </aside>
-
-      <aside
-        className={[
-          "hidden md:block w-64 shrink-0",
-          "self-stretch min-h-screen",
-          "border-r border-white/10 bg-white/[0.03]",
-        ].join(" ")}
-      >
-        <div className="h-full">{children}</div>
-      </aside>
+      </dialog>
     </>
   );
 }

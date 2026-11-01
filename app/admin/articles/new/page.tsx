@@ -30,7 +30,7 @@ const IndexPage = () => {
   }, [data, markdown]);
 
   return (
-    <div data-color-mode="light">
+    <div className="editor-workspace">
       <MDEditor
         value={markdown}
         onChange={(value) => {

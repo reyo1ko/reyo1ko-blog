@@ -40,6 +40,7 @@ export default async function Sidebar() {
 
   for (const blog of blogs) {
     const cat = blog.category;
+    if (!cat?.name) continue;
     const tags = blog.tags ?? [];
 
     if (!map.has(cat.name)) {

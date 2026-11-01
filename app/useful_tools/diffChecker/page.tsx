@@ -30,16 +30,14 @@ function RowButton({
       className={[
         "w-full text-left",
         "rounded-md px-3 py-2",
-        "border border-white/10 bg-white/[0.02]",
-        "hover:bg-white/[0.05] transition-colors",
+        "border border-line bg-surface",
+        "hover:bg-soft transition-colors",
         "disabled:opacity-40 disabled:cursor-not-allowed",
       ].join(" ")}
     >
       <div className="flex items-center justify-between gap-4">
-        <span className="text-sm font-semibold text-zinc-200">{title}</span>
-        {subtitle ? (
-          <span className="text-xs text-zinc-500">{subtitle}</span>
-        ) : null}
+        <span className="text-sm font-semibold text-ink">{title}</span>
+        {subtitle ? <span className="text-xs text-muted">{subtitle}</span> : null}
       </div>
     </button>
   );
@@ -47,9 +45,9 @@ function RowButton({
 
 function MetaRow({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="grid grid-cols-[170px_1fr] gap-4 px-3 py-2 rounded-md border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
-      <div className="text-xs text-zinc-500">{label}</div>
-      <div className="text-sm text-zinc-200 tabular-nums">{value}</div>
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-4 px-3 py-2 rounded-md border border-line bg-surface hover:bg-soft transition-colors">
+      <div className="text-xs text-muted">{label}</div>
+      <div className="text-sm text-ink tabular-nums">{value}</div>
     </div>
   );
 }
@@ -58,12 +56,8 @@ export default function DiffToolPage() {
   const [beforeText, setBeforeText] = useState("");
   const [afterText, setAfterText] = useState("");
 
-  const [beforeStats, setBeforeStats] = useState<TextStats>(() =>
-    calcTextStats("")
-  );
-  const [afterStats, setAfterStats] = useState<TextStats>(() =>
-    calcTextStats("")
-  );
+  const [beforeStats, setBeforeStats] = useState<TextStats>(() => calcTextStats(""));
+  const [afterStats, setAfterStats] = useState<TextStats>(() => calcTextStats(""));
 
   const [diffResult, setDiffResult] = useState<CharDiffResult | null>(null);
   const [exporting, setExporting] = useState(false);
@@ -206,8 +200,8 @@ export default function DiffToolPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
-      <div className="mx-auto max-w-5xl px-6 py-10">
+    <div className="min-h-0 bg-surface text-ink">
+      <div className="tool-page-inner">
         <ToolHeader
           title="差分チェッカー"
           description="2つのテキストを文字単位で比較し、差分のみを控えめにハイライト表示します。"
@@ -223,11 +217,11 @@ export default function DiffToolPage() {
         />
 
         {/* 画面全体の枠（薄い面＋薄い境界） */}
-        <div className="rounded-md border border-white/10 bg-white/[0.02] overflow-hidden">
+        <div className="rounded-md border border-line bg-surface overflow-hidden">
           {/* 見出し行 */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-            <div className="text-sm font-semibold text-zinc-200">差分比較</div>
-            <div className="text-xs text-zinc-500">文字単位</div>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-line">
+            <div className="text-sm font-semibold text-ink">差分比較</div>
+            <div className="text-xs text-muted">文字単位</div>
           </div>
 
           <div className="p-4 space-y-4">
@@ -276,21 +270,15 @@ export default function DiffToolPage() {
             {/* 統計（プロパティ行） */}
             <div className="grid md:grid-cols-2 gap-3">
               <div className="space-y-2">
-                <div className="text-xs text-zinc-500 px-1">Before の統計</div>
-                <MetaRow
-                  label="文字数（空白・改行除く）"
-                  value={beforeStats.charCount}
-                />
+                <div className="text-xs text-muted px-1">Before の統計</div>
+                <MetaRow label="文字数（空白・改行除く）" value={beforeStats.charCount} />
                 <MetaRow label="空白数" value={beforeStats.spaceCount} />
                 <MetaRow label="改行数" value={beforeStats.newlineCount} />
               </div>
 
               <div className="space-y-2">
-                <div className="text-xs text-zinc-500 px-1">After の統計</div>
-                <MetaRow
-                  label="文字数（空白・改行除く）"
-                  value={afterStats.charCount}
-                />
+                <div className="text-xs text-muted px-1">After の統計</div>
+                <MetaRow label="文字数（空白・改行除く）" value={afterStats.charCount} />
                 <MetaRow label="空白数" value={afterStats.spaceCount} />
                 <MetaRow label="改行数" value={afterStats.newlineCount} />
               </div>
@@ -299,23 +287,18 @@ export default function DiffToolPage() {
             {/* 結果（PDF化対象） */}
             <div className="space-y-2">
               <div className="flex items-center justify-between px-1">
-                <div className="text-sm font-semibold text-zinc-200">
-                  差分結果
-                </div>
-                <div className="text-xs text-zinc-500">差分のみハイライト</div>
+                <div className="text-sm font-semibold text-ink">差分結果</div>
+                <div className="text-xs text-muted">差分のみハイライト</div>
               </div>
 
-              <div
-                ref={exportRef}
-                className="rounded-md border border-white/10 bg-white/[0.02]"
-              >
+              <div ref={exportRef} className="rounded-md border border-line bg-surface">
                 <DiffViewer result={diffResult} />
               </div>
             </div>
           </div>
 
           {/* フッター（余計な説明は入れない） */}
-          <div className="px-4 py-3 border-t border-white/10 text-xs text-zinc-500">
+          <div className="px-4 py-3 border-t border-line text-xs text-muted">
             © 差分チェッカー
           </div>
         </div>

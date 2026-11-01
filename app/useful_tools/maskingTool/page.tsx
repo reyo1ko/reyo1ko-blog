@@ -76,12 +76,9 @@ function renderInputPreview(text: string, rules: MaskRule[]) {
 
     // 元の値をオレンジ系でハイライト
     parts.push(
-      <span
-        key={parts.length}
-        className="bg-orange-200 text-zinc-900 px-0.5 rounded"
-      >
+      <span key={parts.length} className="bg-orange-200 text-ink px-0.5 rounded">
         {matchText}
-      </span>
+      </span>,
     );
 
     lastIndex = start + matchText.length;
@@ -96,9 +93,7 @@ function renderInputPreview(text: string, rules: MaskRule[]) {
 
 // ▼ 色付き output プレビュー（マスク済みテキストの replacement をハイライト）
 function renderMaskedPreview(text: string, rules: MaskRule[]) {
-  const activeRules = rules.filter(
-    (r) => r.enabled && r.replacement.trim() !== ""
-  );
+  const activeRules = rules.filter((r) => r.enabled && r.replacement.trim() !== "");
   if (activeRules.length === 0 || text === "") return text;
 
   const pattern = activeRules.map((r) => escapeRegExp(r.replacement)).join("|");
@@ -119,12 +114,9 @@ function renderMaskedPreview(text: string, rules: MaskRule[]) {
 
     // マスク後の値を黄色でハイライト
     parts.push(
-      <span
-        key={parts.length}
-        className="bg-yellow-200 text-zinc-900 px-0.5 rounded"
-      >
+      <span key={parts.length} className="bg-yellow-200 text-zinc-900 px-0.5 rounded">
         {matchText}
-      </span>
+      </span>,
     );
 
     lastIndex = start + matchText.length;
@@ -250,8 +242,8 @@ export default function MaskingToolPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-900">
-      <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="min-h-0 bg-surface">
+      <div className="tool-page-inner">
         <ToolHeader
           title="マスキングツール"
           description="ログや設定ファイルなどから、個人情報や機密情報を簡単にマスク（置換）します。選択範囲の追加や自動検出でマスクルールを作成し、元テキストを安全に共有できます。"
@@ -259,9 +251,7 @@ export default function MaskingToolPage() {
           className="mb-12"
           steps={
             <>
-              <li>
-                入力欄に社内ログや設定ファイルなどのテキストを貼り付けます。
-              </li>
+              <li>入力欄に社内ログや設定ファイルなどのテキストを貼り付けます。</li>
               <li>
                 マスクしたい文字列を選択して「選択範囲をマスク対象に追加」を押すか、
                 「自動検出して候補を追加」を使ってマスクルールを作成します。
@@ -279,13 +269,14 @@ export default function MaskingToolPage() {
         {/* 入力＆出力 */}
         <section className="grid md:grid-cols-2 gap-6 mb-6">
           {/* 入力欄 */}
-          <div className="bg-white/[0.02] rounded-md p-6 border border-white/10">
-            <h2 className="mb-2 text-sm font-semibold text-zinc-100">
+          <div className="bg-surface rounded-md p-6 border border-line">
+            <h2 className="mb-2 text-sm font-semibold text-ink">
               入力テキスト（マスク前）
             </h2>
             <textarea
+              aria-label="マスキングするテキスト"
               ref={textareaRef}
-              className="h-64 w-full bg-white/[0.02] border border-white/10 rounded-md p-3 text-sm font-mono text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+              className="h-64 w-full bg-surface border border-line rounded-md p-3 text-sm font-mono text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent"
               placeholder="ここに社内ログや設定ファイルなどを貼り付けます"
               value={inputText}
               onChange={(e) => handleInputChange(e.target.value)}
@@ -294,21 +285,21 @@ export default function MaskingToolPage() {
               <button
                 type="button"
                 onClick={handleAddSelectionRule}
-                className="rounded-md bg-zinc-700 px-3 py-1.5 text-xs font-semibold text-zinc-100 hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                className="rounded-md bg-strong px-3 py-1.5 text-xs font-semibold text-on-strong hover:bg-strong focus:outline-none focus:ring-2 focus:ring-accent"
               >
                 選択範囲をマスク対象に追加
               </button>
               <button
                 type="button"
                 onClick={handleAutoDetect}
-                className="rounded-md border border-white/10 bg-white/[0.02] px-3 py-1.5 text-xs font-semibold text-zinc-300 hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                className="rounded-md border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-ink hover:bg-soft focus:outline-none focus:ring-2 focus:ring-accent"
               >
                 自動検出して候補を追加
               </button>
               <button
                 type="button"
                 onClick={handleClearAll}
-                className="rounded-md border border-red-300 bg-white/[0.02] px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="rounded-md border border-red-300 bg-surface px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 すべてクリア
               </button>
@@ -316,19 +307,20 @@ export default function MaskingToolPage() {
           </div>
 
           {/* 出力欄 */}
-          <div className="bg-white/[0.02] rounded-md p-6 border border-white/10">
-            <h2 className="mb-2 text-sm font-semibold text-zinc-100">
+          <div className="bg-surface rounded-md p-6 border border-line">
+            <h2 className="mb-2 text-sm font-semibold text-ink">
               出力テキスト（マスク済み）※コピペ用
             </h2>
 
             <textarea
-              className="h-64 w-full bg-white/[0.02] border border-white/10 rounded-md p-3 text-sm font-mono text-zinc-100"
+              aria-label="マスキング済みテキスト"
+              className="h-64 w-full bg-surface border border-line rounded-md p-3 text-sm font-mono text-ink"
               readOnly
               value={outputText}
               placeholder="ここにマスク済みテキストが表示されます"
               onFocus={(e) => e.target.select()}
             />
-            <p className="mt-2 text-xs text-zinc-500">
+            <p className="mt-2 text-xs text-muted">
               ※
               フォーカスすると全選択されるので、そのままコピーして生成AIなどに貼り付けできます。
             </p>
@@ -339,42 +331,33 @@ export default function MaskingToolPage() {
         </section>
 
         {/* マスクルール一覧 */}
-        <section className="mb-8 bg-white/[0.02] rounded-md p-6 border border-white/10">
-          <h2 className="mb-2 text-lg font-semibold text-zinc-100">
-            マスク対象一覧
-          </h2>
+        <section className="mb-8 bg-surface rounded-md p-6 border border-line">
+          <h2 className="mb-2 text-lg font-semibold text-ink">マスク対象一覧</h2>
           {rules.length === 0 ? (
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-muted">
               まだマスク対象が登録されていません。
               左の入力欄で文字列を選択して「選択範囲をマスク対象に追加」を押すか、
               「自動検出して候補を追加」を使ってください。
             </p>
           ) : (
-            <div className="overflow-x-auto rounded-md border border-white/10 bg-white/[0.02]">
+            <div className="overflow-x-auto rounded-md border border-line bg-surface">
               <table className="min-w-full text-xs">
-                <thead className="bg-white/[0.05]">
+                <thead className="bg-soft">
                   <tr>
-                    <th className="px-3 py-2 text-left font-semibold text-zinc-100">
-                      有効
-                    </th>
-                    <th className="px-3 py-2 text-left font-semibold text-zinc-100">
+                    <th className="px-3 py-2 text-left font-semibold text-ink">有効</th>
+                    <th className="px-3 py-2 text-left font-semibold text-ink">
                       元の文字列
                     </th>
-                    <th className="px-3 py-2 text-left font-semibold text-zinc-100">
+                    <th className="px-3 py-2 text-left font-semibold text-ink">
                       置き換え後
                     </th>
-                    <th className="px-3 py-2 text-left font-semibold text-zinc-100">
-                      種類
-                    </th>
+                    <th className="px-3 py-2 text-left font-semibold text-ink">種類</th>
                     <th className="px-3 py-2"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {rules.map((rule) => (
-                    <tr
-                      key={rule.id}
-                      className="border-t border-white/10 hover:bg-white/[0.05]"
-                    >
+                    <tr key={rule.id} className="border-t border-line hover:bg-soft">
                       <td className="px-3 py-1.5 align-top">
                         <input
                           type="checkbox"
@@ -384,18 +367,19 @@ export default function MaskingToolPage() {
                               enabled: e.target.checked,
                             })
                           }
-                          className="bg-white/[0.02] border-white/10 text-zinc-100 focus:ring-zinc-500"
+                          className="bg-surface border-line text-ink focus:ring-accent"
                         />
                       </td>
                       <td className="px-3 py-1.5 align-top max-w-xs">
-                        <div className="break-words font-mono text-[11px] text-zinc-100">
+                        <div className="break-words font-mono text-[11px] text-ink">
                           {rule.pattern}
                         </div>
                       </td>
                       <td className="px-3 py-1.5 align-top">
                         <input
+                          aria-label="マスキングの置換文字列"
                           type="text"
-                          className="w-40 bg-white/[0.02] border border-white/10 rounded-md px-2 py-1 text-[11px] font-mono text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                          className="w-40 bg-surface border border-line rounded-md px-2 py-1 text-[11px] font-mono text-ink focus:outline-none focus:ring-2 focus:ring-accent"
                           value={rule.replacement}
                           onChange={(e) =>
                             handleUpdateRule(rule.id, {
@@ -404,7 +388,7 @@ export default function MaskingToolPage() {
                           }
                         />
                       </td>
-                      <td className="px-3 py-1.5 align-top text-zinc-500">
+                      <td className="px-3 py-1.5 align-top text-muted">
                         {rule.auto ? "自動検出" : "手動"}
                       </td>
                       <td className="px-3 py-1.5 align-top text-right">
@@ -425,33 +409,31 @@ export default function MaskingToolPage() {
         </section>
 
         {/* ▼ 下に、色付き input / output プレビュー */}
-        <section className="bg-white/[0.02] rounded-md p-6 border border-white/10">
-          <h2 className="mb-3 text-lg font-semibold text-zinc-100">
-            色付きプレビュー
-          </h2>
+        <section className="bg-surface rounded-md p-6 border border-line">
+          <h2 className="mb-3 text-lg font-semibold text-ink">色付きプレビュー</h2>
           <div className="grid md:grid-cols-2 gap-4">
             {/* 色付き input */}
             <div>
-              <h3 className="mb-1 text-sm font-semibold text-zinc-100">
+              <h3 className="mb-1 text-sm font-semibold text-ink">
                 色付き Input（マスク対象候補をハイライト）
               </h3>
-              <div className="rounded-md border border-white/10 bg-white/[0.02] p-3 text-sm font-mono whitespace-pre-wrap break-all text-zinc-100">
+              <div className="rounded-md border border-line bg-surface p-3 text-sm font-mono whitespace-pre-wrap break-all text-ink">
                 {renderInputPreview(inputText, rules)}
               </div>
-              <p className="mt-1 text-xs text-zinc-500">
+              <p className="mt-1 text-xs text-muted">
                 ルールに登録されている元の値（pattern）がオレンジ色で表示されます。
               </p>
             </div>
 
             {/* 色付き output */}
             <div>
-              <h3 className="mb-1 text-sm font-semibold text-zinc-100">
+              <h3 className="mb-1 text-sm font-semibold text-ink">
                 色付き Output（マスク済み部分をハイライト）
               </h3>
-              <div className="rounded-md border border-white/10 bg-white/[0.02] p-3 text-sm font-mono whitespace-pre-wrap break-all text-zinc-100">
+              <div className="rounded-md border border-line bg-surface p-3 text-sm font-mono whitespace-pre-wrap break-all text-ink">
                 {renderMaskedPreview(outputText, rules)}
               </div>
-              <p className="mt-1 text-xs text-zinc-500">
+              <p className="mt-1 text-xs text-muted">
                 ルールの置き換え後文字列（replacement）が黄色で表示されます。
               </p>
             </div>

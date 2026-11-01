@@ -22,10 +22,10 @@ export default function CopyButton({ text }: { text: string }) {
       className="
         rounded-md px-2 py-1
         text-[10px] font-medium
-        text-zinc-200
-        border border-white/10
-        bg-white/[0.02]
-        hover:bg-white/[0.06] hover:border-white/20
+        text-ink
+        border border-line
+        bg-surface
+        hover:bg-soft hover:border-line
         active:scale-[0.97]
         transition-colors
         select-none

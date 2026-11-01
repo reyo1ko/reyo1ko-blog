@@ -1,5 +1,6 @@
 import CategoryTagFilterClient from "../components/blog/CategoryTagFilterClient";
-import Blog from "../components/blog/Blog";
+import ArticleList from "../components/blog/ArticleList";
+import PageHeading from "../components/PageHeading";
 import { getList } from "../libs/microcms";
 
 type Mode = "or" | "and";
@@ -28,7 +29,7 @@ const filterBlogs = (
   blogs: any[],
   selectedCategory: string,
   selectedTags: string[],
-  mode: Mode
+  mode: Mode,
 ) => {
   return blogs.filter((blog) => {
     const catName = blog.category?.name ?? "";
@@ -52,7 +53,7 @@ const extractCategories = (blogs: any[]) => {
     if (c?.name && !map.has(c.name)) map.set(c.name, c);
   });
   return Array.from(map.values()).sort((a, b) =>
-    String(a.name).localeCompare(String(b.name), "ja")
+    String(a.name).localeCompare(String(b.name), "ja"),
   );
 };
 
@@ -66,7 +67,7 @@ const extractTags = (blogs: any[]) => {
     });
   });
   return Array.from(map.values()).sort((a, b) =>
-    String(a.name).localeCompare(String(b.name), "ja")
+    String(a.name).localeCompare(String(b.name), "ja"),
   );
 };
 
@@ -74,7 +75,7 @@ const makeCategoryCounts = (
   allBlogs: any[],
   categories: any[],
   selectedTags: string[],
-  mode: Mode
+  mode: Mode,
 ) => {
   const base = filterBlogs(allBlogs, "", selectedTags, mode);
 
@@ -89,7 +90,7 @@ const makeTagCounts = (
   tags: any[],
   selectedCategory: string,
   selectedTags: string[],
-  mode: Mode
+  mode: Mode,
 ) => {
   return tags.reduce((acc: Record<string, number>, tag: any) => {
     const name = tag.name;
@@ -98,7 +99,7 @@ const makeTagCounts = (
     const base = filterBlogs(allBlogs, selectedCategory, others, mode);
 
     acc[name] = base.filter((b: any) =>
-      b.tags?.some((t: any) => t?.name === name)
+      b.tags?.some((t: any) => t?.name === name),
     ).length;
 
     return acc;
@@ -117,10 +118,6 @@ export default async function BlogPage({
   const { contents } = await getList({ limit: 80 });
   const allBlogs = (contents ?? []) as any[];
 
-  if (!allBlogs || allBlogs.length === 0) {
-    return <div className="text-sm text-zinc-500">No contents</div>;
-  }
-
   const selectedCategory = parseSingleParam(searchParams?.category);
   const selectedTags = parseListParam(searchParams?.tags);
   const mode = parseModeParam(searchParams?.mode);
@@ -130,104 +127,35 @@ export default async function BlogPage({
 
   const blogs = filterBlogs(allBlogs, selectedCategory, selectedTags, mode);
 
-  const categoryCounts = makeCategoryCounts(
-    allBlogs,
-    categories,
-    selectedTags,
-    mode
-  );
-  const tagCounts = makeTagCounts(
-    allBlogs,
-    tags,
-    selectedCategory,
-    selectedTags,
-    mode
-  );
+  const categoryCounts = makeCategoryCounts(allBlogs, categories, selectedTags, mode);
+  const tagCounts = makeTagCounts(allBlogs, tags, selectedCategory, selectedTags, mode);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 sm:px-8 lg:px-10">
-      <header className="pt-6 pb-4">
-        <h1 className="text-center text-2xl sm:text-3xl font-semibold text-zinc-100 tracking-tight">
-          記事一覧
-        </h1>
-        <div className="mt-4 border-t border-white/10" />
-      </header>
-
-      <div className="rounded-lg border border-white/10 bg-white/[0.02] overflow-hidden">
-        <div className="md:hidden px-3 py-3 border-b border-white/10">
-          <CategoryTagFilterClient
-            basePath="/blogs"
-            categories={categories}
-            tags={tags}
-            selectedCategory={selectedCategory}
-            selectedTags={selectedTags}
-            mode={mode}
-            categoryCounts={categoryCounts}
-            tagCounts={tagCounts}
-            totalCount={allBlogs.length}
-            filteredCount={blogs.length}
-          />
-        </div>
-
-        <div className="hidden md:block px-3 sm:px-4 py-2 border-b border-white/10">
-          <CategoryTagFilterClient
-            basePath="/blogs"
-            categories={categories}
-            tags={tags}
-            selectedCategory={selectedCategory}
-            selectedTags={selectedTags}
-            mode={mode}
-            categoryCounts={categoryCounts}
-            tagCounts={tagCounts}
-            totalCount={allBlogs.length}
-            filteredCount={blogs.length}
-          />
-        </div>
-
-        {/* 一覧 */}
-        <div className="overflow-x-hidden">
-          <table className="w-full border-collapse table-fixed">
-            <thead>
-              {/* スマホ：2列 */}
-              <tr className="md:hidden border-b border-white/10 bg-white/[0.01]">
-                <th className="px-4 py-2 text-left text-[12px] font-semibold text-zinc-500 w-1/2">
-                  タイトル
-                </th>
-                <th className="px-4 py-2 text-left text-[12px] font-semibold text-zinc-500 w-1/2">
-                  カテゴリ/タグ名
-                </th>
-              </tr>
-
-              {/* md以上：3列 */}
-              <tr className="hidden md:table-row border-b border-white/10 bg-white/[0.01]">
-                <th className="px-4 py-2 text-left text-[12px] font-semibold text-zinc-500 w-5/12">
-                  タイトル
-                </th>
-                <th className="px-4 py-2 text-left text-[12px] font-semibold text-zinc-500 w-3/12">
-                  ジャンル
-                </th>
-                <th className="px-4 py-2 text-left text-[12px] font-semibold text-zinc-500 w-4/12">
-                  技術タグ
-                </th>
-              </tr>
-            </thead>
-
-            <tbody className="text-sm">
-              {blogs.map((blog: any) => (
-                <Blog
-                  key={blog.id}
-                  id={blog.id}
-                  title={blog.title}
-                  category={blog.category ?? null}
-                  tags={blog.tags ?? []}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+    <div>
+      <PageHeading
+        eyebrow="KNOWLEDGE LIBRARY"
+        title="記事を読む"
+        description="日々の仕事で学んだことを、あとから引き出せる場所に。"
+      />
+      <section className="filter-panel" aria-label="記事の絞り込み">
+        <CategoryTagFilterClient
+          basePath="/blogs"
+          categories={categories}
+          tags={tags}
+          selectedCategory={selectedCategory}
+          selectedTags={selectedTags}
+          mode={mode}
+          categoryCounts={categoryCounts}
+          tagCounts={tagCounts}
+          totalCount={allBlogs.length}
+          filteredCount={blogs.length}
+        />
+      </section>
+      <div className="list-heading">
+        <span>NOTES</span>
+        <span>{blogs.length} 件の記事</span>
       </div>
-
-      <div className="h-10" />
+      <ArticleList articles={blogs} />
     </div>
   );
 }

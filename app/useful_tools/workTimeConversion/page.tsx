@@ -7,7 +7,7 @@ const convertWorkTime = (
   value: number,
   unit: string,
   workHoursPerDay: number,
-  workDaysPerMonth: number
+  workDaysPerMonth: number,
 ): Record<string, number> => {
   let hours = 0;
 
@@ -36,8 +36,8 @@ const WorkTimeConversionPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-900">
-      <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="min-h-0 bg-surface">
+      <div className="tool-page-inner">
         <ToolHeader
           title="労働時間変換ツール"
           description="所定労働時間と営業日数を基に、人時・人日・人月の間で変換を行います。"
@@ -47,25 +47,18 @@ const WorkTimeConversionPage = () => {
             <>
               <li>所定労働時間（時間/日）と営業日数（日/月）を入力します。</li>
               <li>変換したい人時・人日・人月の値と単位を入力します。</li>
-              <li>
-                「変換」ボタンを押すと、他の単位に変換された結果が表示されます。
-              </li>
+              <li>「変換」ボタンを押すと、他の単位に変換された結果が表示されます。</li>
             </>
           }
         />
 
         {/* 条件入力 */}
-        <section className="mb-12 bg-white/[0.02] rounded-md p-6 border border-white/10">
-          <h2 className="text-2xl font-semibold text-zinc-100 mb-4">
-            条件入力
-          </h2>
+        <section className="mb-12 bg-surface rounded-md p-6 border border-line">
+          <h2 className="text-2xl font-semibold text-ink mb-4">条件入力</h2>
 
           <div className="flex flex-col space-y-4 mb-6">
             <div className="flex items-center space-x-2">
-              <label
-                htmlFor="workHoursPerDay"
-                className="font-medium text-zinc-300 w-48"
-              >
+              <label htmlFor="workHoursPerDay" className="font-medium text-ink w-48">
                 所定労働時間 (時間/日):
               </label>
               <input
@@ -73,15 +66,12 @@ const WorkTimeConversionPage = () => {
                 id="workHoursPerDay"
                 value={workHoursPerDay}
                 onChange={(e) => setWorkHoursPerDay(Number(e.target.value))}
-                className="bg-white/[0.02] border border-white/10 rounded-md px-2 py-1 flex-1 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                className="bg-surface border border-line rounded-md px-2 py-1 flex-1 text-ink focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </div>
 
             <div className="flex items-center space-x-2">
-              <label
-                htmlFor="workDaysPerMonth"
-                className="font-medium text-zinc-300 w-48"
-              >
+              <label htmlFor="workDaysPerMonth" className="font-medium text-ink w-48">
                 営業日数 (日/月):
               </label>
               <input
@@ -89,7 +79,7 @@ const WorkTimeConversionPage = () => {
                 id="workDaysPerMonth"
                 value={workDaysPerMonth}
                 onChange={(e) => setWorkDaysPerMonth(Number(e.target.value))}
-                className="bg-white/[0.02] border border-white/10 rounded-md px-2 py-1 flex-1 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                className="bg-surface border border-line rounded-md px-2 py-1 flex-1 text-ink focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </div>
           </div>
@@ -100,29 +90,27 @@ const WorkTimeConversionPage = () => {
 
         {/* 結果カード */}
         {result && (
-          <section className="bg-white/[0.02] rounded-md p-6 border border-white/10">
-            <h2 className="text-2xl font-semibold text-zinc-100 mb-4">
-              変換結果
-            </h2>
+          <section className="bg-surface rounded-md p-6 border border-line">
+            <h2 className="text-2xl font-semibold text-ink mb-4">変換結果</h2>
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-zinc-500">人時</span>
-                <span className="font-mono font-semibold text-zinc-100">
+                <span className="text-muted">人時</span>
+                <span className="font-mono font-semibold text-ink">
                   {result.hours.toFixed(2)}
                 </span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-zinc-500">人日</span>
-                <span className="font-mono font-semibold text-zinc-100">
+                <span className="text-muted">人日</span>
+                <span className="font-mono font-semibold text-ink">
                   {result.days.toFixed(2)}
                 </span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-zinc-500">人月</span>
-                <span className="font-mono font-semibold text-zinc-100">
+                <span className="text-muted">人月</span>
+                <span className="font-mono font-semibold text-ink">
                   {result.months.toFixed(2)}
                 </span>
               </div>

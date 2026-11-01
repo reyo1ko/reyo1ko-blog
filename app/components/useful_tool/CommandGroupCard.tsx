@@ -8,9 +8,9 @@ export type CommandGroup = {
 
 export default function CommandGroupCard({ group }: { group: CommandGroup }) {
   return (
-    <div className="rounded-md border border-white/10 bg-white/[0.02] p-4 text-sm">
-      <h3 className="text-sm font-semibold text-zinc-100">{group.title}</h3>
-      <p className="mt-1 mb-3 text-xs text-zinc-500">{group.description}</p>
+    <div className="rounded-md border border-line bg-surface p-4 text-sm">
+      <h3 className="text-sm font-semibold text-ink">{group.title}</h3>
+      <p className="mt-1 mb-3 text-xs text-muted">{group.description}</p>
 
       <div className="space-y-2">
         {group.items.map((item, i) => (

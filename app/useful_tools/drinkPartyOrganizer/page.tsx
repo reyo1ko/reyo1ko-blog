@@ -49,13 +49,10 @@ const DrinkPartyOrganizerPage = () => {
   };
 
   const calculateTotals = () => {
-    const totalGroupCount = groups.reduce(
-      (sum, group) => sum + group.groupCount,
-      0
-    );
+    const totalGroupCount = groups.reduce((sum, group) => sum + group.groupCount, 0);
     const totalGroupAmount = groups.reduce(
       (sum, group) => sum + group.groupCount * group.groupAmountPerPerson,
-      0
+      0,
     );
 
     return {
@@ -70,8 +67,8 @@ const DrinkPartyOrganizerPage = () => {
     calculateTotals();
 
   return (
-    <div className="min-h-screen bg-zinc-900">
-      <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="min-h-0 bg-surface">
+      <div className="tool-page-inner">
         <ToolHeader
           title="飲み会幹事お会計"
           description="飲み会の幹事さん向けに、コース料金または総額から各グループのお会計を自動計算します。グループごとの人数と一人当たり金額を入力するだけで、合計金額と人数の照合も行います。"

@@ -33,9 +33,7 @@ const ResultVerification = ({
       } else {
         const diff = totalGroupAmount - expectedTotalAmount;
         messages.push(
-          `⚠️ 請求金額に対して ${Math.abs(diff)}円 ${
-            diff > 0 ? "多く" : "少なく"
-          }回収`
+          `⚠️ 請求金額に対して ${Math.abs(diff)}円 ${diff > 0 ? "多く" : "少なく"}回収`,
         );
       }
     }
@@ -47,9 +45,7 @@ const ResultVerification = ({
       } else {
         const diff = totalGroupAmount - Number(totalBill);
         messages.push(
-          `⚠️ 請求金額に対して ${Math.abs(diff)}円 ${
-            diff > 0 ? "多く" : "少なく"
-          }回収`
+          `⚠️ 請求金額に対して ${Math.abs(diff)}円 ${diff > 0 ? "多く" : "少なく"}回収`,
         );
       }
     }
@@ -60,9 +56,7 @@ const ResultVerification = ({
     } else {
       const diff = totalGroupCount - Number(totalPeople);
       messages.push(
-        `⚠️ 参加人数に対して ${Math.abs(diff)}人 ${
-          diff > 0 ? "多く" : "少なく"
-        }参加`
+        `⚠️ 参加人数に対して ${Math.abs(diff)}人 ${diff > 0 ? "多く" : "少なく"}参加`,
       );
     }
 
@@ -72,11 +66,11 @@ const ResultVerification = ({
   const messages = generateMessage();
 
   return (
-    <section className="mb-12 bg-white/[0.02] rounded-md p-6 border border-white/10">
-      <h2 className="text-2xl font-semibold text-zinc-100 mb-4">結果の照合</h2>
+    <section className="mb-12 bg-surface rounded-md p-6 border border-line">
+      <h2 className="text-2xl font-semibold text-ink mb-4">結果の照合</h2>
       <div className="space-y-2">
         {messages.map((message, index) => (
-          <p key={index} className="text-sm text-zinc-300">
+          <p key={index} className="text-sm text-ink">
             {message}
           </p>
         ))}
